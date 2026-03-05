@@ -186,8 +186,7 @@ function render() {
         </div>
       </div>
       <!-- Grid -->
-      <div class="mg-grid" id="mg-grid"
-           style="grid-template-columns: repeat(${GRID_COLS}, 1fr);">
+      <div class="mg-grid" id="mg-grid">
         ${deck.map(card => `
           <div class="mg-card nice-container mg-card--${card.type}"
                data-uid="${card.uid}"
@@ -405,10 +404,10 @@ function injectStyles() {
 
     /* ── Grid ── */
     .mg-grid {
-      display: grid;
-      gap: 0px;
-      width: 90%;
-      max-width: 90%;
+    gap: 8px;
+    width: 90%;
+    max-width: 600px; 
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     }
 
     /* ── Card shell ── */
