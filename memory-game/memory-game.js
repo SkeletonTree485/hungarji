@@ -176,7 +176,15 @@ function render() {
         <button class="button small mg-restart-btn" id="mg-restart">↺ Restart</button>
         <button class="button small mg-reveal-btn" id="mg-reveal" title="Reveal all cards for 3 seconds">👁 Reveal</button>
       </div>
-
+    <!-- Win banner -->
+      <div class="mg-win-banner nice-container" id="mg-win-banner" style="display:none;">
+        <div class="mg-win-content">
+          <span class="mg-win-trophy">🏆</span>
+          <h2 class="mg-win-title">You matched them all!</h2>
+          <p class="mg-win-stats" id="mg-win-stats"></p>
+          <button class="button mg-restart-btn" id="mg-win-restart">Play Again</button>
+        </div>
+      </div>
       <!-- Grid -->
       <div class="mg-grid" id="mg-grid"
            style="grid-template-columns: repeat(${GRID_COLS}, 1fr);">
@@ -192,16 +200,6 @@ function render() {
             </div>
           </div>
         `).join("")}
-      </div>
-
-      <!-- Win banner -->
-      <div class="mg-win-banner nice-container" id="mg-win-banner" style="display:none;">
-        <div class="mg-win-content">
-          <span class="mg-win-trophy">🏆</span>
-          <h2 class="mg-win-title">You matched them all!</h2>
-          <p class="mg-win-stats" id="mg-win-stats"></p>
-          <button class="button mg-restart-btn" id="mg-win-restart">Play Again</button>
-        </div>
       </div>
 
     </div>
@@ -333,14 +331,15 @@ function injectStyles() {
   if (document.getElementById("mg-styles")) return;
 
   const css = `
+ 
     /* ── Wrapper ── */
     .mg-wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 18px;
+      gap: 10px;
       padding: 24px 12px 40px;
-      width: 100%;
+      width: 90%;
       box-sizing: border-box;
     }
 
@@ -349,9 +348,9 @@ function injectStyles() {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 28px;
+      gap: 26px;
       flex-wrap: wrap;
-      width: 90%;
+      width: 80%;
       max-width: 680px;
       padding: 14px 24px !important;
     }
@@ -407,18 +406,18 @@ function injectStyles() {
     /* ── Grid ── */
     .mg-grid {
       display: grid;
-      gap: 12px;
+      gap: 0px;
       width: 90%;
-      max-width: 840px;
+      max-width: 90%;
     }
 
     /* ── Card shell ── */
     .mg-card {
-      aspect-ratio: 3 / 4;
+      aspect-ratio: 1;
       perspective: 800px;
       cursor: pointer;
       padding: 0 !important;
-      border-radius: 10px !important;
+      border-radius: 0px !important;
       overflow: hidden;
       transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
@@ -451,7 +450,7 @@ function injectStyles() {
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      border-radius: 10px;
+      border-radius: 0px;
     }
 
     /* ── Back face ── */
@@ -570,6 +569,7 @@ function injectStyles() {
       .mg-hud  { width: 96%; gap: 16px; padding: 12px 14px !important; }
       .mg-restart-btn { margin-left: 0; width: 100%; text-align: center; }
     }
+  
   `;
 
   const style = document.createElement("style");

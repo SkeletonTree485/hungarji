@@ -28,7 +28,7 @@ const TILES = [
   {
     id: 3,
     name: "Lookout tower in Monor",
-    image: "https://hj.no1online.cz/assets/images/monor_lookout_twrs.jpg",
+    image: "https://hj.no1online.cz/assets/images/monor_lookout_twr.jpg",
   },
   {
     id: 4,
