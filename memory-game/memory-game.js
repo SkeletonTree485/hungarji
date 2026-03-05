@@ -1,20 +1,32 @@
 // ============================================================
-//  memory-game.js  –  Data-driven Memory Game
+//  memory-game.js  –  Data-driven Memory Game (name ↔ image pairs)
 //
-//  Configuration  ↓  (change these two values to resize the grid)
+//  Configuration  ↓
 // ============================================================
 
-const GRID_COLS = 4;   // number of columns
-const GRID_ROWS = 4;   // number of rows  (cols × rows must be even)
+const GRID_COLS = 4;   // columns  ┐ product must be even
+const GRID_ROWS = 4;   // rows     ┘ e.g. 4×4 = 16 cards = 8 pairs
+
+// Accent colours cycled for the name cards (one per pair)
+const NAME_CARD_COLORS = [
+  "rgba(218,253,21,0.18)",
+  "rgba(21,210,253,0.18)",
+  "rgba(253,100,21,0.18)",
+  "rgba(180,21,253,0.18)",
+  "rgba(21,253,120,0.18)",
+  "rgba(253,21,100,0.18)",
+  "rgba(253,200,21,0.18)",
+  "rgba(21,80,253,0.18)",
+];
 
 // ============================================================
 //  Internal state
 // ============================================================
-let deck        = [];   // all card objects currently in play
-let flipped     = [];   // up to 2 cards currently face-up
-let matched     = new Set();
-let moves       = 0;
-let lockBoard   = false;
+let deck          = [];
+let flipped       = [];
+let matched       = new Set();
+let moves         = 0;
+let lockBoard     = false;
 let timerInterval = null;
 let secondsElapsed = 0;
 
@@ -31,37 +43,50 @@ function shuffle(arr) {
 }
 
 function formatTime(s) {
-  const m = Math.floor(s / 60).toString().padStart(2, "0");
+  const m   = Math.floor(s / 60).toString().padStart(2, "0");
   const sec = (s % 60).toString().padStart(2, "0");
   return `${m}:${sec}`;
 }
 
 // ============================================================
-//  Build deck from tiles.js data
+//  Build deck
+//  Each tile produces TWO cards: one "name" card, one "image" card.
 // ============================================================
 function buildDeck() {
-  const totalCards = GRID_COLS * GRID_ROWS;
+  const totalCards  = GRID_COLS * GRID_ROWS;
   const pairsNeeded = totalCards / 2;
 
   if (pairsNeeded > TILES.length) {
     console.error(
-      `Not enough tiles! Need ${pairsNeeded} pairs but only ${TILES.length} tiles defined in tiles.js`
+      `Not enough tiles! Need ${pairsNeeded} pairs but only ${TILES.length} defined in tiles.js`
     );
     return [];
   }
 
   const chosen = shuffle(TILES).slice(0, pairsNeeded);
+  const cards  = [];
 
-  // duplicate each tile to create a pair, give each card a unique uid
-  const cards = [];
   chosen.forEach((tile, idx) => {
-    ["a", "b"].forEach(side => {
-      cards.push({
-        uid:        `${tile.id}-${side}`,
-        pairId:     tile.id,
-        frontLabel: tile.frontLabel,
-        name:       tile.name,
-      });
+    const accentColor = NAME_CARD_COLORS[idx % NAME_CARD_COLORS.length];
+
+    // Name card
+    cards.push({
+      uid:        `${tile.id}-name`,
+      pairId:     tile.id,
+      type:       "name",
+      name:       tile.name,
+      image:      tile.image,
+      accent:     accentColor,
+    });
+
+    // Image card
+    cards.push({
+      uid:        `${tile.id}-img`,
+      pairId:     tile.id,
+      type:       "image",
+      name:       tile.name,
+      image:      tile.image,
+      accent:     accentColor,
     });
   });
 
@@ -89,6 +114,36 @@ function stopTimer() {
 function updateTimerDisplay() {
   const el = document.getElementById("mg-timer");
   if (el) el.textContent = formatTime(secondsElapsed);
+}
+
+// ============================================================
+//  Card HTML builders
+// ============================================================
+function nameCardFront(card) {
+  return `
+    <div class="mg-card-front mg-card-front--name"
+         style="background:${card.accent};">
+      <span class="mg-name-label">${card.name}</span>
+    </div>`;
+}
+
+function imageCardFront(card) {
+  if (card.image) {
+    return `
+      <div class="mg-card-front mg-card-front--image">
+        <img class="mg-card-img"
+             src="${card.image}"
+             alt="${card.name}"
+             loading="lazy"
+             onerror="this.parentElement.classList.add('mg-img-error');this.remove()">
+      </div>`;
+  }
+  // fallback when no image provided
+  return `
+    <div class="mg-card-front mg-card-front--image mg-img-error"
+         style="background:${card.accent};">
+      <span class="mg-name-label">${card.name[0]}</span>
+    </div>`;
 }
 
 // ============================================================
@@ -125,21 +180,20 @@ function render() {
       <div class="mg-grid" id="mg-grid"
            style="grid-template-columns: repeat(${GRID_COLS}, 1fr);">
         ${deck.map(card => `
-          <div class="mg-card nice-container" data-uid="${card.uid}" data-pair="${card.pairId}">
+          <div class="mg-card nice-container mg-card--${card.type}"
+               data-uid="${card.uid}"
+               data-pair="${card.pairId}">
             <div class="mg-card-inner">
               <div class="mg-card-back">
-                <span class="mg-card-back-icon">?</span>
+                <span class="mg-card-back-icon">${card.type === "name" ? "A" : "?"}</span>
               </div>
-              <div class="mg-card-front">
-                <span class="mg-card-emoji">${card.frontLabel}</span>
-                <span class="mg-card-name">${card.name}</span>
-              </div>
+              ${card.type === "name" ? nameCardFront(card) : imageCardFront(card)}
             </div>
           </div>
         `).join("")}
       </div>
 
-      <!-- Win banner (hidden until victory) -->
+      <!-- Win banner -->
       <div class="mg-win-banner nice-container" id="mg-win-banner" style="display:none;">
         <div class="mg-win-content">
           <span class="mg-win-trophy">🏆</span>
@@ -158,7 +212,7 @@ function render() {
 }
 
 // ============================================================
-//  Event handling
+//  Events
 // ============================================================
 function attachEvents() {
   document.getElementById("mg-grid").addEventListener("click", onCardClick);
@@ -185,14 +239,14 @@ function onCardClick(e) {
 
 function checkMatch() {
   const [a, b] = flipped;
-  const isMatch = a.dataset.pair === b.dataset.pair;
+  const isMatch = a.dataset.pair === b.dataset.pair && a.dataset.uid !== b.dataset.uid;
 
   if (isMatch) {
     a.classList.add("mg-matched");
     b.classList.add("mg-matched");
     matched.add(a.dataset.pair);
-    flipped = [];
-    lockBoard = false;
+    flipped    = [];
+    lockBoard  = false;
     updateHUD();
 
     if (matched.size === deck.length / 2) {
@@ -203,14 +257,14 @@ function checkMatch() {
     setTimeout(() => {
       a.classList.remove("mg-flipped");
       b.classList.remove("mg-flipped");
-      flipped = [];
+      flipped   = [];
       lockBoard = false;
-    }, 1000);
+    }, 1100);
   }
 }
 
 // ============================================================
-//  HUD + Win
+//  HUD + Win screen
 // ============================================================
 function updateHUD() {
   const movesEl = document.getElementById("mg-moves");
@@ -232,18 +286,17 @@ function showWin() {
 // ============================================================
 function initGame() {
   stopTimer();
-  deck    = buildDeck();
-  flipped = [];
-  matched = new Set();
-  moves   = 0;
+  deck      = buildDeck();
+  flipped   = [];
+  matched   = new Set();
+  moves     = 0;
   lockBoard = false;
-
   if (!deck.length) return;
   render();
 }
 
 // ============================================================
-//  Scoped styles injected once
+//  Injected CSS
 // ============================================================
 function injectStyles() {
   if (document.getElementById("mg-styles")) return;
@@ -289,7 +342,7 @@ function injectStyles() {
       font-size: 1.55rem;
       font-weight: 700;
       font-family: 'Rajdhani', sans-serif;
-      color: rgb(218, 253, 21);
+      color: rgb(218,253,21);
       text-shadow: 0 0 8px rgba(218,253,21,0.5);
       line-height: 1;
     }
@@ -304,13 +357,13 @@ function injectStyles() {
       display: grid;
       gap: 12px;
       width: 90%;
-      max-width: 800px;
+      max-width: 840px;
     }
 
     /* ── Card shell ── */
     .mg-card {
-      aspect-ratio: 1 / 1;
-      perspective: 700px;
+      aspect-ratio: 3 / 4;
+      perspective: 800px;
       cursor: pointer;
       padding: 0 !important;
       border-radius: 10px !important;
@@ -322,20 +375,20 @@ function injectStyles() {
       box-shadow: 0 8px 28px rgba(0,0,0,0.45);
     }
 
-    /* ── 3-D flip inner ── */
+    /* ── Flip inner ── */
     .mg-card-inner {
       position: relative;
       width: 100%;
       height: 100%;
       transform-style: preserve-3d;
-      transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.46s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .mg-flipped .mg-card-inner,
     .mg-matched .mg-card-inner {
       transform: rotateY(180deg);
     }
 
-    /* ── Faces ── */
+    /* ── Shared face styles ── */
     .mg-card-back,
     .mg-card-front {
       position: absolute;
@@ -348,46 +401,80 @@ function injectStyles() {
       justify-content: center;
       border-radius: 10px;
     }
+
+    /* ── Back face ── */
     .mg-card-back {
       background: rgba(255,255,255,0.04);
       border: 2px solid rgba(255,255,255,0.12);
     }
+    /* Name-card back gets a subtle "A" hint, image-card back "?" */
+    .mg-card--name .mg-card-back { border-color: rgba(218,253,21,0.2); }
+    .mg-card--image .mg-card-back { border-color: rgba(255,255,255,0.1); }
     .mg-card-back-icon {
       font-size: 2rem;
       font-weight: 900;
-      color: rgba(255,255,255,0.35);
-      text-shadow: none;
       font-family: 'Rajdhani', sans-serif;
+      color: rgba(255,255,255,0.3);
+      text-shadow: none;
       user-select: none;
-    }
-    .mg-card-front {
-      transform: rotateY(180deg);
-      background: rgba(255,255,255,0.07);
-      border: 2px solid rgba(255,255,255,0.22);
-      gap: 6px;
-    }
-    .mg-card-emoji {
-      font-size: clamp(1.4rem, 4vw, 2.6rem);
-      line-height: 1;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-      user-select: none;
-    }
-    .mg-card-name {
-      font-size: clamp(0.55rem, 1.3vw, 0.78rem);
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      color: rgba(255,255,255,0.85);
-      text-transform: uppercase;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
     }
 
-    /* ── Matched state ── */
-    .mg-matched .mg-card-front {
-      background: rgba(218,253,21,0.14);
-      border-color: rgba(218,253,21,0.55);
-      box-shadow: 0 0 16px rgba(218,253,21,0.3);
+    /* ── Front face (shared) ── */
+    .mg-card-front {
+      transform: rotateY(180deg);
+      border: 2px solid rgba(255,255,255,0.22);
     }
-    .mg-matched .mg-card-emoji { filter: none; }
+
+    /* ── Name card front ── */
+    .mg-card-front--name {
+      padding: 12px;
+      gap: 0;
+    }
+    .mg-name-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: clamp(0.85rem, 2.2vw, 1.25rem);
+      text-align: center;
+      color: #fff;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+      letter-spacing: 0.03em;
+      line-height: 1.25;
+      text-transform: uppercase;
+      word-break: break-word;
+    }
+
+    /* ── Image card front ── */
+    .mg-card-front--image {
+      padding: 0;
+      overflow: hidden;
+    }
+    .mg-card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 8px;
+      transition: transform 0.3s ease;
+    }
+    .mg-flipped .mg-card-img,
+    .mg-matched .mg-card-img {
+      transform: scale(1.04);
+    }
+    /* fallback when image fails to load */
+    .mg-img-error {
+      background: rgba(255,255,255,0.06) !important;
+      font-size: 2rem;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* ── Matched glow ── */
+    .mg-matched .mg-card-front {
+      border-color: rgba(218,253,21,0.6);
+      box-shadow: 0 0 18px rgba(218,253,21,0.35);
+    }
+    .mg-matched .mg-card-front--name {
+      background-color: rgba(218,253,21,0.2) !important;
+    }
 
     /* ── Win banner ── */
     .mg-win-banner {
@@ -422,10 +509,10 @@ function injectStyles() {
     }
     @keyframes mg-pop {
       from { opacity:0; transform:scale(0.7); }
-      to   { opacity:1; transform:scale(1); }
+      to   { opacity:1; transform:scale(1);   }
     }
 
-    /* ── Responsive tweaks ── */
+    /* ── Responsive ── */
     @media (max-width: 600px) {
       .mg-grid { gap: 8px; width: 96%; }
       .mg-hud  { width: 96%; gap: 16px; padding: 12px 14px !important; }
@@ -440,6 +527,6 @@ function injectStyles() {
 }
 
 // ============================================================
-//  Bootstrap — wait for DOM + tiles.js
+//  Bootstrap
 // ============================================================
 document.addEventListener("DOMContentLoaded", initGame);

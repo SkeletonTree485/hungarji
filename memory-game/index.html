@@ -2,29 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/styles.css">
   <title>Memory Game</title>
-  <style>
-/* 
- */
-  </style>
 </head>
 <body>
+
   <div class="background" id="background"></div>
-    <header class="top-bar">
-        <a href="">
-            <img class="logo" src="" alt="Logo">
-        </a>
-    </header>
-    <div class="content">
-      <div>
-              <img class="img-logo" src="" alt="Logo">
-      </div>
-      <h1> Memory game</h1>
-      <div class="nice-container" id="quiz-container" ></div>
-    </div>  
-    <script src="memory-game.js"></script>
-    <script src="tiles.js"></script>  
+
+  <header class="top-bar">
+    <a href="/">
+      <img class="logo" src="" alt="Logo">
+    </a>
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/memory-game/">Memory Game</a>
+      <a href="/puzzle/">Puzzle</a>
+    </nav>
+    <div class="hamburger" id="hamburger">
+      <div></div><div></div><div></div>
+    </div>
+  </header>
+
+  <div class="content">
+    <div id="quiz-container"></div>
+  </div>
+
+  <script src="cards.js"></script>
+  <script src="memory-game.js"></script>
 
 </body>
 </html>
