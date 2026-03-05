@@ -174,6 +174,7 @@ function render() {
           <span class="mg-hud-value" id="mg-timer">00:00</span>
         </div>
         <button class="button small mg-restart-btn" id="mg-restart">↺ Restart</button>
+        <button class="button small mg-reveal-btn" id="mg-reveal" title="Reveal all cards for 3 seconds">👁 Reveal</button>
       </div>
 
       <!-- Grid -->
@@ -185,7 +186,7 @@ function render() {
                data-pair="${card.pairId}">
             <div class="mg-card-inner">
               <div class="mg-card-back">
-                <span class="mg-card-back-icon">${card.type === "name" ? "A" : "?"}</span>
+                <span class="mg-card-back-icon">?</span>
               </div>
               ${card.type === "name" ? nameCardFront(card) : imageCardFront(card)}
             </div>
@@ -217,8 +218,38 @@ function render() {
 function attachEvents() {
   document.getElementById("mg-grid").addEventListener("click", onCardClick);
   document.getElementById("mg-restart").addEventListener("click", initGame);
+  document.getElementById("mg-reveal").addEventListener("click", onReveal);
   const winBtn = document.getElementById("mg-win-restart");
   if (winBtn) winBtn.addEventListener("click", initGame);
+}
+
+let revealTimeout = null;
+
+function onReveal() {
+  const btn = document.getElementById("mg-reveal");
+  if (!btn || btn.disabled) return;
+
+  // Disable both action buttons during reveal
+  btn.disabled = true;
+  btn.textContent = "👁 3…";
+  lockBoard = true;
+
+  const grid = document.getElementById("mg-grid");
+  grid.classList.add("mg-revealing");
+
+  let countdown = 3;
+  const tick = setInterval(() => {
+    countdown--;
+    if (countdown > 0) {
+      btn.textContent = `👁 ${countdown}…`;
+    } else {
+      clearInterval(tick);
+      grid.classList.remove("mg-revealing");
+      lockBoard = false;
+      btn.disabled = false;
+      btn.textContent = "👁 Reveal";
+    }
+  }, 1000);
 }
 
 function onCardClick(e) {
@@ -350,6 +381,27 @@ function injectStyles() {
       margin-left: auto;
       font-size: 0.95rem !important;
       padding: 10px 18px !important;
+    }
+    .mg-reveal-btn {
+      font-size: 0.95rem !important;
+      padding: 10px 18px !important;
+      opacity: 0.6;
+      border-color: rgba(255,255,255,0.15) !important;
+    }
+    .mg-reveal-btn:hover:not(:disabled) {
+      opacity: 1;
+    }
+    .mg-reveal-btn:disabled {
+      cursor: default;
+      opacity: 0.9;
+      color: rgb(218,253,21) !important;
+      border-color: rgba(218,253,21,0.4) !important;
+      transform: none !important;
+    }
+
+    /* Reveal: flip all unmatched cards open temporarily */
+    .mg-revealing .mg-card:not(.mg-matched) .mg-card-inner {
+      transform: rotateY(180deg);
     }
 
     /* ── Grid ── */

@@ -17,92 +17,42 @@
 const TILES = [
   {
     id: 1,
-    name: "Mount Fuji",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/080103_hakkai_fuji.jpg/320px-080103_hakkai_fuji.jpg",
+    name: "Hungarian Parliament",
+    image: "https://hj.no1online.cz/assets/images/hu_parliament.jpg",
   },
   {
     id: 2,
-    name: "Sakura",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/320px-Image_created_with_a_mobile_phone.png",
+    name: "Budapest Bathouse",
+    image: "https://hj.no1online.cz/assets/images/budapest_bathouse.jpg",
   },
   {
     id: 3,
-    name: "Torii Gate",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Fushimi_Inari-taisha_Torii_gates.jpg/320px-Fushimi_Inari-taisha_Torii_gates.jpg",
+    name: "Lookout tower in Monor",
+    image: "https://hj.no1online.cz/assets/images/monor_lookout_twrs.jpg",
   },
   {
     id: 4,
-    name: "Bento Box",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Bento_box_lunch.jpg/320px-Bento_box_lunch.jpg",
+    name: "Hero square in Budapest",
+    image: "https://hj.no1online.cz/assets/images/budapest_hero_square.jpg",
   },
   {
     id: 5,
-    name: "Bamboo Forest",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Bamboo_forest_Arashiyama_Kyoto_Japan.jpg/320px-Bamboo_forest_Arashiyama_Kyoto_Japan.jpg",
+    name: "First bridge in Budapest",
+    image: "https://hj.no1online.cz/assets/images/budapest_chain_bridge.jpg",
   },
   {
     id: 6,
-    name: "Ramen",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Shoyu_Ramen.jpg/320px-Shoyu_Ramen.jpg",
+    name: "Matthias Church in Budapest",
+    image: "https://hj.no1online.cz/assets/images/budapest_matthias_church.jpg",
   },
   {
     id: 7,
-    name: "Samurai",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Nakamura_Seijuro_1.jpg/240px-Nakamura_Seijuro_1.jpg",
+    name: "Margaret Island in Budapest",
+    image: "https://hj.no1online.cz/assets/images/budapest_margaret_island.jpg",
   },
   {
     id: 8,
-    name: "Matcha",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Matcha_green_tea.jpg/320px-Matcha_green_tea.jpg",
-  },
-  {
-    id: 9,
-    name: "Shinkansen",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Shinkansen_700.jpg/320px-Shinkansen_700.jpg",
-  },
-  {
-    id: 10,
-    name: "Origami Crane",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Orizuru.jpg/320px-Orizuru.jpg",
-  },
-  {
-    id: 11,
-    name: "Sumo",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Sumo_ceremony.jpg/320px-Sumo_ceremony.jpg",
-  },
-  {
-    id: 12,
-    name: "Kabuki",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Kabuki_dancer.jpg/240px-Kabuki_dancer.jpg",
-  },
-  {
-    id: 13,
-    name: "Koi Fish",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Koi_fish.jpg/320px-Koi_fish.jpg",
-  },
-  {
-    id: 14,
-    name: "Osaka Castle",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Osaka_Castle_in_November_2019.jpg/320px-Osaka_Castle_in_November_2019.jpg",
-  },
-  {
-    id: 15,
-    name: "Taiko Drum",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Taiko_drum_front.jpg/240px-Taiko_drum_front.jpg",
-  },
-  {
-    id: 16,
-    name: "Maneki-neko",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Maneki-neko-Japanese.jpg/240px-Maneki-neko-Japanese.jpg",
-  },
-  {
-    id: 17,
-    name: "Ikebana",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Ikebana_2013.JPG/240px-Ikebana_2013.JPG",
-  },
-  {
-    id: 18,
-    name: "Japanese Garden",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Kinkaku-ji_temple_Kyoto.jpg/320px-Kinkaku-ji_temple_Kyoto.jpg",
-  },
+    name: "Budapest Nyugati railway station",
+    image: "https://hj.no1online.cz/assets/images/budapest_nyugati_station.jpg",
+  }
 ];
