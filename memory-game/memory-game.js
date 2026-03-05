@@ -183,7 +183,7 @@ function render() {
       <!-- Grid -->
       <div class="mg-grid" id="mg-grid">
         ${deck.map(card => `
-          <div class="mg-card nice-container mg-card--${card.type}"
+          <div class="mg-card mg-card--${card.type}"
                data-uid="${card.uid}"
                data-pair="${card.pairId}">
             <div class="mg-card-inner">
