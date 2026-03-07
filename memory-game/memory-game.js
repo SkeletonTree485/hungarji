@@ -168,8 +168,6 @@ function render() {
           <span class="mg-hud-label">Time</span>
           <span class="mg-hud-value" id="mg-timer">00:00</span>
         </div>
-        <button class="button small mg-restart-btn" id="mg-restart">↺ Restart</button>
-        <button class="button small mg-reveal-btn" id="mg-reveal" title="Reveal all cards for 3 seconds">👁 Reveal</button>
       </div>
     <!-- Win banner -->
       <div class="mg-win-banner nice-container" id="mg-win-banner" style="display:none;">
@@ -195,7 +193,7 @@ function render() {
           </div>
         `).join("")}
       </div>
-
+      <button class="button" id="mg-restart">↺ Restart</button>
     </div>
   `;
 
@@ -215,33 +213,6 @@ function attachEvents() {
 }
 
 let revealTimeout = null;
-
-function onReveal() {
-  const btn = document.getElementById("mg-reveal");
-  if (!btn || btn.disabled) return;
-
-  // Disable both action buttons during reveal
-  btn.disabled = true;
-  btn.textContent = "👁 3…";
-  lockBoard = true;
-
-  const grid = document.getElementById("mg-grid");
-  grid.classList.add("mg-revealing");
-
-  let countdown = 3;
-  const tick = setInterval(() => {
-    countdown--;
-    if (countdown > 0) {
-      btn.textContent = `👁 ${countdown}…`;
-    } else {
-      clearInterval(tick);
-      grid.classList.remove("mg-revealing");
-      lockBoard = false;
-      btn.disabled = false;
-      btn.textContent = "👁 Reveal";
-    }
-  }, 1000);
-}
 
 function onCardClick(e) {
   const cardEl = e.target.closest(".mg-card");
