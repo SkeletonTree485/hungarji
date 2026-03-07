@@ -18,41 +18,41 @@ const TILES = [
   {
     id: 1,
     name: "Hungarian Parliament",
-    image: "https://hj.no1online.cz/assets/images/hu_parliament.jpg",
+    image: "https://game.no1online.cz/assets/images/hu_parliament.jpg",
   },
   {
     id: 2,
     name: "Budapest Bathouse",
-    image: "https://hj.no1online.cz/assets/images/budapest_bathouse.jpg",
+    image: "https://game.no1online.cz/assets/images/budapest_bathouse.jpg",
   },
   {
     id: 3,
     name: "Lookout tower in Monor",
-    image: "https://hj.no1online.cz/assets/images/monor_lookout_twr.jpg",
+    image: "https://game.no1online.cz/assets/images/monor_lookout_twr.jpg",
   },
   {
     id: 4,
     name: "Hero square in Budapest",
-    image: "https://hj.no1online.cz/assets/images/budapest_hero_square.jpg",
+    image: "https://game.no1online.cz/assets/images/budapest_hero_square.jpg",
   },
   {
     id: 5,
     name: "First bridge in Budapest",
-    image: "https://hj.no1online.cz/assets/images/budapest_chain_bridge.jpg",
+    image: "https://game.no1online.cz/assets/images/budapest_chain_bridge.jpg",
   },
   {
     id: 6,
     name: "Matthias Church in Budapest",
-    image: "https://hj.no1online.cz/assets/images/budapest_matthias_church.jpg",
+    image: "https://game.no1online.cz/assets/images/budapest_matthias_church.jpg",
   },
   {
     id: 7,
     name: "Margaret Island in Budapest",
-    image: "https://hj.no1online.cz/assets/images/budapest_margaret_island.jpg",
+    image: "https://game.no1online.cz/assets/images/budapest_margaret_island.jpg",
   },
   {
     id: 8,
     name: "Budapest Nyugati railway station",
-    image: "https://hj.no1online.cz/assets/images/budapest_nyugati_station.jpg",
+    image: "https://game.no1online.cz/assets/images/budapest_nyugati_station.jpg",
   }
 ];
